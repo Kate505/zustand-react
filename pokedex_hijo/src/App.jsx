@@ -5,12 +5,34 @@ import {ContadorComponent} from './ContadorComponent';
 import {useContadorStore} from './store/ContadorStore.jsx';
 
 function App() {
-  const {count, setCount} = useContadorStore();
+  const {count, setCount, listaNumeros, eliminarItem, resetear} = useContadorStore();
+
+  const fnEliminarItem = (index) => {
+    eliminarItem(index);
+  }
 
   return (
     <>
       <div>
-        <ContadorComponent/>
+        <h1>Contador: {count}</h1>
+        <button onClick={resetear}>Reset</button>
+        <div>
+          <h2>Valores acmulados del contador:</h2>
+          <ul>
+            {
+              listaNumeros.map((item, index) => {
+                return(
+                  <li key={index}>
+                    {
+                     item
+                    }
+                    <button onClick={() => fnEliminarItem((index))}>Eliminar</button>
+                  </li>
+                )
+              })
+            }
+          </ul>
+        </div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo"/>
         </a>
@@ -20,7 +42,7 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={() => setCount({ numero: 2 })}>
+        <button onClick={() => setCount({numero: 2})}>
           count is {count}
         </button>
         <p>
