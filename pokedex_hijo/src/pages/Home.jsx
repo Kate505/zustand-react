@@ -1,30 +1,33 @@
-import styled from 'styled-components'
-import {usePokemonStore} from '../store/PokemonStore';
-import {useQuery} from '@tanstack/react-query';
-import {ClimbingBoxLoader} from "react-spinners"
+import { usePokemonStore } from '../store/PokemonStore';
+import { useQuery } from '@tanstack/react-query';
+import { ClimbingBoxLoader, HashLoader } from 'react-spinners';
+import { HomeTemplate } from '../components/templates/HomeTemplate';
 
-export function Home() {
-  const {fetchPokemons, pokemons} = usePokemonStore();
-  const {isLoading, isError, data, error} = useQuery({queryKey: ['mostrarpokemons'], queryFn: fetchPokemons});
+export function Home () {
+	const {fetchPokemons} = usePokemonStore();
+	const {isLoading, isError, error, isFetching, refetch} = useQuery(
+		{
+			queryKey: ['mostrar pokemons'],
+			queryFn: fetchPokemons,
+			refetchOnWindowFocus: false,
+			staleTime: Infinity,
+		});
 
-  if (isLoading) {
-    return <ClimbingBoxLoader color="#89ce6b" size={30} speedMultiplier={2} />
-  }
+	if (isLoading) {
+		return <ClimbingBoxLoader color="#89ce6b" size={ 30 } speedMultiplier={ 2 }/>;
+	}
 
-  if (isError) {
-    return <span>{error.message}</span>
-  }
+	if (isFetching) {
+		return <HashLoader color="#1fc8ea"/>;
+	}
 
-  return (
-    <Container>
-      {
-        data.results.map((item,i) => (
-          <span key={i}>{item.name}</span>
-        ))
-      }
-      <ClimbingBoxLoader color="#89ce6b" size={30} speedMultiplier={2} />
-    </Container>
-  )
+	if (isError) {
+		return <span>{ error.message }</span>;
+	}
+
+	return (
+		<div>
+			<HomeTemplate />
+		</div>
+	);
 }
-
-const Container = styled.div``;
